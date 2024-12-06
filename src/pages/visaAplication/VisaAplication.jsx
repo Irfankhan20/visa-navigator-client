@@ -1,0 +1,9 @@
+const VisaAplication = () => {
+  return (
+    <div className="lg:mt-[70px] md:mt-[60px] mt-[62px]">
+      <h1 className="">this is visa aplication page</h1>
+    </div>
+  );
+};
+
+export default VisaAplication;
