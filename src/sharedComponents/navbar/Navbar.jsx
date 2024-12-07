@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../components/provider/AuthProvider";
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
+  const [visible, setVisible] = useState(false);
 
   const navlink = (
     <>
@@ -24,7 +25,7 @@ const Navbar = () => {
           }
           to={"/allvisa"}
         >
-          All visas
+          All Visas
         </NavLink>
       </li>
       <li>
@@ -44,29 +45,29 @@ const Navbar = () => {
           }
           to={"/addedvisa"}
         >
-          My added visas
+          My Added Visas
         </NavLink>
       </li>
-
       <li>
         <NavLink
           className={({ isActive }) =>
             isActive ? "underline font-bold text-white" : "hover:font-bold"
           }
-          to={"/visaaplication"}
+          to={"/visaapplication"}
         >
-          My Visa applications
+          My Visa Applications
         </NavLink>
       </li>
     </>
   );
+
   return (
     <div>
-      <div className="navbar fixed z-50  w-full bg-primary text-text ">
+      <div className="navbar fixed z-50 w-full bg-primary text-text">
         <div className="navbar-start">
           <Link
             to={""}
-            className=" mx-4 font-bold font-serif text-text text-2xl"
+            className="mx-4 font-bold font-serif text-text text-2xl"
           >
             VisaNavigator
           </Link>
@@ -76,23 +77,31 @@ const Navbar = () => {
         </div>
         <div className="navbar-end">
           {user ? (
-            <div className="flex items-center">
+            <div
+              className="flex items-center relative"
+              onMouseEnter={() => setVisible(true)}
+              onMouseLeave={() => setVisible(false)}
+            >
               <div className="flex items-center md:gap-5">
-                <h1 className="text-center hidden md:block font-semibold">
-                  welcome to {user.displayName} !!!
-                </h1>
                 <img
-                  className=" rounded-full w-8 h-8 mr-3"
+                  className="rounded-full w-8 h-8 mr-3"
                   src={user.photoURL}
                   alt={user.email}
                 />
               </div>
-              <button
-                onClick={signOutUser}
-                className="btn hidden border-none lg:flex text-text bg-button  font-bold"
-              >
-                SignOut
-              </button>
+              {visible && (
+                <div className="bg-white shadow-2xl rounded-xl absolute top-8 right-3 md:w-44 p-4">
+                  <h1 className="text-center text-black text-base hidden md:block font-semibold">
+                    Welcome {user.displayName} !!!
+                  </h1>
+                  <button
+                    onClick={signOutUser}
+                    className="justify-center py-2 rounded-xl hidden w-full border-none lg:flex text-text bg-button font-bold mt-3"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex gap-3">
@@ -100,7 +109,7 @@ const Navbar = () => {
                 to={"/signin"}
                 className={({ isActive }) =>
                   isActive
-                    ? "btn hidden border-none lg:flex text-button bg-text  font-bold"
+                    ? "btn hidden border-none lg:flex text-button bg-text font-bold"
                     : "btn hidden lg:flex text-white border border-white bg-button font-bold"
                 }
               >
@@ -110,7 +119,7 @@ const Navbar = () => {
                 to={"/signup"}
                 className={({ isActive }) =>
                   isActive
-                    ? "btn hidden border-none lg:flex text-button bg-text  font-bold"
+                    ? "btn hidden border-none lg:flex text-button bg-text font-bold"
                     : "btn hidden lg:flex text-white border border-white bg-button font-bold"
                 }
               >
@@ -140,18 +149,18 @@ const Navbar = () => {
               className="menu text-lg menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-[#3b3b3aea] text-white rounded-box w-52"
             >
               {navlink}
-              <li className=" justify-center font-bold">
+              <li className="justify-center font-bold">
                 {user ? (
                   <button
                     onClick={signOutUser}
-                    className=" btn py-3 bg-button text-text"
+                    className="btn py-3 bg-button text-text"
                   >
-                    SignOut
+                    Sign Out
                   </button>
                 ) : (
                   <Link
                     to={"/signin"}
-                    className="btn  border-none lg:flex bg-button py-3 mt-3  font-bold text-text"
+                    className="btn border-none lg:flex bg-button py-3 mt-3 font-bold text-text"
                   >
                     Sign In
                   </Link>

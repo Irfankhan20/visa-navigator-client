@@ -9,8 +9,26 @@ const SignUp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const validatePassword = (password) => {
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const isValidLength = password.length >= 6;
+
+    if (!hasUppercase) {
+      return "Password must include at least one uppercase letter.";
+    }
+    if (!hasLowercase) {
+      return "Password must include at least one lowercase letter.";
+    }
+    if (!isValidLength) {
+      return "Password must be at least 6 characters long.";
+    }
+    return null;
+  };
+
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -24,17 +42,33 @@ const SignUp = () => {
     const password = form.password.value;
     const user = { name, email, imageUrl, password };
     console.log(user);
+    // Validate password
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
+      return;
+    }
+
+    setPasswordError("");
 
     //create user
     createUser(email, password)
       .then((result) => {
         toast.success("login successful!");
         console.log(result.user);
-        // handleUpdateProfile(name, imageUrl);
+        handleUpdateProfile(name, imageUrl);
         form.reset();
         navigate(from, { replace: true });
       })
       .catch((error) => console.log("ERROR", error.message));
+
+    // Update user profile
+    const handleUpdateProfile = (name, imageUrl) => {
+      const profile = { displayName: name, photoURL: imageUrl };
+      updateUserProfile(profile)
+        .then(() => {})
+        .catch((error) => console.error(error));
+    };
   };
 
   return (
@@ -125,6 +159,10 @@ const SignUp = () => {
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </span>
             </div>
+            {/* Password Error Message */}
+            {passwordError && (
+              <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+            )}
           </div>
 
           {/* Submit Button */}
