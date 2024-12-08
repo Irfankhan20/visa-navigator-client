@@ -63,8 +63,8 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="navbar fixed z-50 w-full bg-primary text-text">
-        <div className="navbar-start">
+      <div className="navbar  fixed z-50 w-full bg-primary text-text">
+        <div className="navbar-start ">
           <Link
             to={""}
             className="mx-4 font-bold font-serif text-text text-2xl"
@@ -76,21 +76,22 @@ const Navbar = () => {
           <ul className="menu menu-horizontal text-lg">{navlink}</ul>
         </div>
         <div className="navbar-end">
+          {/* for large devices  */}
           {user ? (
             <div
               className="flex items-center relative"
               onMouseEnter={() => setVisible(true)}
               onMouseLeave={() => setVisible(false)}
             >
-              <div className="flex items-center md:gap-5">
+              <div className="flex items-center md:gap-5 border rounded-full w-10 h-10 border-white">
                 <img
-                  className="rounded-full w-8 h-8 mr-3"
+                  className="rounded-full ml-[3px] w-8 h-8 mr-3"
                   src={user.photoURL}
                   alt={user.email}
                 />
               </div>
               {visible && (
-                <div className="bg-white shadow-2xl rounded-xl absolute top-8 right-3 md:w-44 p-4">
+                <div className="bg-white hidden lg:block shadow-2xl rounded-xl absolute top-9 right-2 md:w-44 p-4">
                   <h1 className="text-center text-black text-base hidden md:block font-semibold">
                     Welcome {user.displayName} !!!
                   </h1>
@@ -127,6 +128,7 @@ const Navbar = () => {
               </NavLink>
             </div>
           )}
+          {/* for small devices  */}
           <div className="dropdown z-50">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -158,12 +160,20 @@ const Navbar = () => {
                     Sign Out
                   </button>
                 ) : (
-                  <Link
-                    to={"/signin"}
-                    className="btn border-none lg:flex bg-button py-3 mt-3 font-bold text-text"
-                  >
-                    Sign In
-                  </Link>
+                  <div className="">
+                    <Link
+                      to={"/signin"}
+                      className="btn border-none lg:flex bg-button py-3 mt-3 font-bold text-text"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to={"/signup"}
+                      className="btn border-none lg:flex bg-button py-3 mt-3 font-bold text-text"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
                 )}
               </li>
             </ul>

@@ -41,7 +41,7 @@ const SignUp = () => {
     const imageUrl = await usePhoto(photo);
     const password = form.password.value;
     const user = { name, email, imageUrl, password };
-    console.log(user);
+    // console.log(user);
     // Validate password
     const passwordValidationError = validatePassword(password);
     if (passwordValidationError) {
@@ -55,7 +55,7 @@ const SignUp = () => {
     createUser(email, password)
       .then((result) => {
         toast.success("login successful!");
-        console.log(result.user);
+        // console.log(result.user);
         handleUpdateProfile(name, imageUrl);
         form.reset();
         navigate(from, { replace: true });
@@ -73,7 +73,7 @@ const SignUp = () => {
 
   return (
     <div className="lg:min-h-[70vh] w-full bg-green-200 border-black lg:mt-[75px] md:mt-[60px] mt-[62px] md:py-10 md:px-8 lg:px-0 md:flex md:justify-center lg:gap-10 md:items-center">
-      <div className="text-center lg:text-left">
+      <div className="text-center mb-4 md:mb-0 lg:mb-0 lg:text-left">
         <h1 className="text-3xl mt-8 md:mt-0 lg:mt-0 md:text-start text-center text-button font-bold italic">
           <span className="text-gray-500">Sign Up Now to </span>
         </h1>
