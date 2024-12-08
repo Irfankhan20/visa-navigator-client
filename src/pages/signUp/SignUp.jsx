@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useContext, useState } from "react";
-import { usePhoto } from "../../utilities/ImageHosting";
+import { usePhoto } from "../../utilities/ImageHosting"; // Ensure this function is properly implemented for image uploads
 import { AuthContext } from "../../components/provider/AuthProvider";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ const SignUp = () => {
   const { createUser, updateUserProfile } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+
   const validatePassword = (password) => {
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -32,16 +33,15 @@ const SignUp = () => {
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
-    const photo = form.photo.files[0];
-    const imageUrl = await usePhoto(photo);
     const password = form.password.value;
-    const user = { name, email, imageUrl, password };
-    // console.log(user);
+    const photo = form.photo.files[0];
+
     // Validate password
     const passwordValidationError = validatePassword(password);
     if (passwordValidationError) {
@@ -51,23 +51,39 @@ const SignUp = () => {
 
     setPasswordError("");
 
-    //create user
+    // Upload photo or use default image
+    let imageUrl =
+      "https://i.ibb.co.com/LNDqG5r/profile-png-removebg-preview.png";
+    if (photo) {
+      try {
+        imageUrl = await usePhoto(photo);
+      } catch (error) {
+        console.error("Photo upload failed:", error);
+        toast.error("Failed to upload photo. Please try again.");
+        return;
+      }
+    }
+
+    // Create user
     createUser(email, password)
       .then((result) => {
-        toast.success("login successful!");
-        // console.log(result.user);
+        toast.success("Signup successful!");
+        console.log("User created:", result.user);
         handleUpdateProfile(name, imageUrl);
         form.reset();
         navigate(from, { replace: true });
       })
-      .catch((error) => console.log("ERROR", error.message));
+      .catch((error) => {
+        console.error("Error creating user:", error.message);
+        toast.error("Signup failed. Please try again.");
+      });
 
     // Update user profile
     const handleUpdateProfile = (name, imageUrl) => {
       const profile = { displayName: name, photoURL: imageUrl };
       updateUserProfile(profile)
-        .then(() => {})
-        .catch((error) => console.error(error));
+        .then(() => console.log("Profile updated"))
+        .catch((error) => console.error("Error updating profile:", error));
     };
   };
 
@@ -88,18 +104,13 @@ const SignUp = () => {
             <label className="label">
               <span className="label-text text-base">Name</span>
             </label>
-            <div className="indicator w-full flex-col">
-              <span className="indicator-item mr-3 badge bg-primary text-white border-none">
-                Required
-              </span>
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                className="input input-bordered shadow-lg"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              className="input input-bordered shadow-lg"
+              required
+            />
           </div>
 
           {/* Email Input */}
@@ -107,30 +118,24 @@ const SignUp = () => {
             <label className="label">
               <span className="label-text text-base">Email</span>
             </label>
-            <div className="indicator w-full flex-col">
-              <span className="indicator-item mr-3 badge bg-primary text-white border-none">
-                Required
-              </span>
-              <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                className="input input-bordered shadow-lg"
-                required
-              />
-            </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              className="input input-bordered shadow-lg"
+              required
+            />
           </div>
 
           {/* Photo Upload */}
-
           <div className="form-control">
             <label className="label">
-              <span className="label-text text-base">Photo URL (optional)</span>
+              <span className="label-text text-base">Photo (optional)</span>
             </label>
             <input
               type="file"
               name="photo"
-              className="file-input file-input-bordered file-input-success w-full "
+              className="file-input file-input-bordered file-input-success w-full"
             />
           </div>
 
@@ -140,18 +145,13 @@ const SignUp = () => {
               <span className="label-text text-base">Password</span>
             </label>
             <div className="relative">
-              <div className="indicator w-full flex-col">
-                <span className="indicator-item mr-3 badge bg-primary text-white border-none">
-                  Required
-                </span>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Your Password"
-                  className="input input-bordered shadow-lg w-full"
-                  required
-                />
-              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Your Password"
+                className="input input-bordered shadow-lg w-full"
+                required
+              />
               <span
                 className="absolute top-4 right-3 text-xl cursor-pointer"
                 onClick={handleShowPassword}
