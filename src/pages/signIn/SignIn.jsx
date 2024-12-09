@@ -7,7 +7,7 @@ const SignIn = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
-  const { signInUser, signupWihtGoogle } = useContext(AuthContext);
+  const { signInUser, signupWihtGoogle, setEmail } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => {
@@ -17,7 +17,7 @@ const SignIn = () => {
   const googleSignIn = () => {
     signupWihtGoogle()
       .then((result) => {
-        // console.log("Google Sign-In successful:", result.user);
+        console.log("Google Sign-In successful:", result.user);
         navigate(from, { replace: true });
         toast.success("login successful!");
       })
@@ -37,7 +37,7 @@ const SignIn = () => {
     // Create user
     signInUser(email, password)
       .then((result) => {
-        // console.log(result);
+        console.log(result);
 
         navigate(from, { replace: true });
         toast.success("login successful!");
@@ -80,6 +80,7 @@ const SignIn = () => {
               <input
                 type="email"
                 name="email"
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
                 className="input input-bordered shadow-lg"
                 required
@@ -118,7 +119,7 @@ const SignIn = () => {
             </div>
             <label className="label">
               <Link
-                to="/forgotPassword"
+                to="/forgotpassword"
                 className="text-base label-text-alt link link-hover"
               >
                 Forgot password?

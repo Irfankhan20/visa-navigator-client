@@ -6,6 +6,7 @@ import AddedVisas from "../pages/addedVisas/AddedVisas";
 import VisaAplication from "../pages/visaAplication/VisaAplication";
 import SignIn from "../pages/signIn/SignIn";
 import SignUp from "../pages/signUp/SignUp";
+import ForgotPassword from "../pages/signIn/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <SignUp></SignUp>,
+      },
+      {
+        path: "/forgotpassword",
+        element: <ForgotPassword></ForgotPassword>,
       },
     ],
   },
